@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a tu pizzería favorita</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+        .contenedor {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: #fff;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        h1, h2 {
+            color: #e63946;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .social-icons img {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+        footer {
+            margin-top: 40px;
+            background-color: #212529;
+            color: white;
+            padding: 20px 0;
+        }
+        footer a {
+            color: #f8f9fa;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .comentarios {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+        .comentarios label, .comentarios input, .comentarios textarea {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .comentarios button {
+            background-color: #e63946;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+        .comentarios button:hover {
+            background-color: #d62839;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>¡Bienvenido a tu pizzería favorita!</h1>
+        <p>Haz tu pedido en línea y disfruta el sabor único.</p>
+        <img src="tu-imagen-de-pizza.jpg" alt="Pizza deliciosa">
+        <button id="verMenu">Ver Menú</button>
+    </div>
+
+    <div class="contenedor comentarios">
+        <h2>Deja un comentario</h2>
+        <form id="formularioComentario">
+            <label for="nombreComentario">Nombre:</label>
+            <input type="text" id="nombreComentario" placeholder="Tu nombre" required>
+
+            <label for="correoComentario">Correo Electrónico:</label>
+            <input type="email" id="correoComentario" placeholder="Tu correo electrónico" required>
+
+            <label for="comentario">Comentario:</label>
+            <textarea id="comentario" rows="5" placeholder="Escribe tu comentario..." required></textarea>
+
+            <button type="submit">Enviar Comentario</button>
+        </form>
+    </div>
+
+    <footer>
+        <h2>Síguenos en nuestras redes sociales</h2>
+        <div class="social-icons">
+            <a href="https://www.facebook.com" target="_blank">
+                <img src="facebook-icon.png" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com" target="_blank">
+                <img src="instagram-icon.png" alt="Instagram">
+            </a>
+            <a href="https://www.twitter.com" target="_blank">
+                <img src="twitter-icon.png" alt="Twitter">
+            </a>
+        </div>
+        <p>&copy; 2025 Tu Pizzería Favorita. Todos los derechos reservados.</p>
+        <a href="mailto:tu-correo@ejemplo.com">Contáctanos</a>
+    </footer>
+
+    <script>
+        // Funcionalidad de comentarios
+        document.getElementById("formularioComentario").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById("nombreComentario").value;
+            const correo = document.getElementById("correoComentario").value;
+            const comentario = document.getElementById("comentario").value;
+
+            // Aquí podrías usar un servicio como EmailJS para enviar el correo
+            alert("¡Gracias por tu comentario, " + nombre + "! Te responderemos pronto al correo: " + correo);
+        });
+
+        // Funcionalidad para ver el menú (puedes expandir esta lógica)
+        document.getElementById("verMenu").addEventListener("click", function () {
+            alert("¡Explora nuestro menú en línea y realiza tu pedido!");
+        });
+    </script>
+</body>
+</html>
