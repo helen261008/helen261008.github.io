@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Ropa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(194, 160, 233);
+            margin: 0;
+            padding: 20px;
+        }
+        .seccion {
+            display: none;
+        }
+        .activa {
+            display: block;
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #8fee92;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #19c0b8;
+        }
+        .producto {
+            display: inline-block;
+            margin: 20px;
+            text-align: center;
+        }
+        .producto img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+        .producto p {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+        .imagen-bienvenida {
+            width: 100%;
+            max-width: 500px;
+            display: block;
+            margin: 0 auto;
+        }
+        .cesta {
+            margin-top: 20px;
+        }
+        .cesta p {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Página 1: Bienvenida -->
+    <div id="bienvenida" class="seccion activa">
+        <h1>¡Bienvenido a la Tienda de Ropa!</h1>
+        <img src="ropa1.jpg" alt="Imagen de la tienda" class="imagen-bienvenida">
+        <p>Gracias por visitarnos. Haz clic en el botón para comenzar tu compra.</p>
+        <button onclick="mostrarSeleccionCategoria()">Comenzar compra</button>
+    </div>
+
+    <!-- Página 2: Selección de categoría de prenda -->
+    <div id="seleccion-categoria" class="seccion">
+        <h1>Selecciona la categoría de prenda</h1>
+        <button onclick="mostrarProductos('vestidos')">Vestidos</button>
+        <button onclick="mostrarProductos('pantalones')">Pantalones</button>
+        <button onclick="mostrarProductos('shorts')">Shorts</button>
+        <button onclick="mostrarProductos('camisas')">Camisas</button>
+        <button onclick="mostrarProductos('blusas')">Blusas</button>
+        <button onclick="mostrarProductos('jeans')">Jeans</button>
+        <button onclick="mostrarProductos('trajes')">Trajes</button>
+    </div>
+
+    <!-- Página 3: Selección de productos -->
+    <div id="seleccion-producto" class="seccion">
+        <h1>Selecciona tus productos</h1>
+        
+        <!-- Aquí se actualizarán los productos según la categoría seleccionada -->
+        <div id="productos"></div>
+
+        <br><br>
+        <button type="button" onclick="calcularTotal()">Calcular Total</button>
+        <p id="total"></p>
+        <br>
+        <button id="confirmar" style="display:none;" onclick="mostrarSeleccionEntrega()">Confirmar Compra</button>
+        <button onclick="regresarCategoria()">Regresar a Categorías</button>
+        <div class="cesta" id="cesta"></div>
+        <button onclick="borrarSeleccion()">Borrar Selección</button>
+    </div>
+
+    <!-- Página 4: Opción de entrega (a domicilio o recogida en tienda) -->
+    <div id="opcion-entrega" class="seccion">
+        <h1>¿Cómo deseas recibir tu pedido?</h1>
+        <button onclick="mostrarFormularioDomicilio()">A Domicilio</button>
+        <button onclick="mostrarDatosUsuario()">Recoger en Tienda</button>
+        <button onclick="regresarProductos()">Regresar a Productos</button>
+    </div>
+
+    <!-- Página 5: Datos de usuario (nombre, teléfono, correo, dirección) -->
+    <div id="datos-usuario" class="seccion">
+        <h1>Introduce tus datos para el envío</h1>
+        <form>
+            <label for="nombre">Nombre Completo:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <br><br>
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" name="telefono" required>
+            <br><br>
+            <label for="correo">Correo Electrónico:</label>
+            <input type="email" id="correo" name="correo" required>
+            <br><br>
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" required>
+            <br><br>
+            <button type="button" onclick="mostrarMetodoPago()">Confirmar Dirección</button>
+        </form>
+    </div>
+
+    <!-- Página 6: Selección de método de pago -->
+    <div id="metodo-pago" class="seccion">
+        <h1>Selecciona tu método de pago</h1>
+        <button onclick="alert('Pago en efectivo confirmado')">Efectivo</button>
+        <button onclick="alert('Pago con tarjeta confirmado')">Tarjeta</button>
+    </div>
+
+    <script>
+        let metodoEntrega = "";
+        let productosSeleccionados = [];
+
+        // Función para mostrar la página de bienvenida
+        function mostrarSeleccionCategoria() {
+            document.getElementById("bienvenida").classList.remove("activa");
+            document.getElementById("seleccion-categoria").classList.add("activa");
+        }
+
+        // Función para mostrar los productos según la categoría seleccionada
+        function mostrarProductos(categoria) {
+            document.getElementById("seleccion-categoria").classList.remove("activa");
+            document.getElementById("seleccion-producto").classList.add("activa");
+            let productosHTML = "";
+            
+            // Limitar a un máximo de 20 productos
+            let productos = [];
+            if (categoria === "vestidos") {
+                productos = Array(20).fill().map((_, i) => ({
+                    nombre: `Vestido ${i + 1}`,
+                    precio: 50 + i,
+                    imagen: `https://via.placeholder.com/150?text=Vestido${i + 1}`
+                }));
+            } else if (categoria === "pantalones") {
+                productos = Array(20).fill().map((_, i) => ({
+                    nombre: `Pantalón ${i + 1}`,
+                    precio: 40 + i,
+                    imagen: `https://via.placeholder.com/150?text=Pantalon${i + 1}`
+                }));
+            } else if (categoria === "shorts") {
+                productos = Array(20).fill().map((_, i) => ({
+                    nombre: `Short ${i + 1}`,
+                    precio: 20 + i,
+                    imagen: `https://via.placeholder.com/150?text=Short${i + 1}`
+                }));
+            } else if (categoria === "camisas") {
+                productos = Array(20).fill().map((_, i) => ({
+                    nombre: `Camisa ${i + 1}`,
+                    precio: 30 + i,
+                    imagen: `https://via.placeholder.com/150?text=Camisa${i + 1}`
+                }));
+            } else if (categoria === "blusas") {
+                productos = Array(20).fill().map((_, i) => ({
+                    nombre: `Blusa ${i + 1}`,
+                    precio: 25 + i,
+                    imagen: `https://via.placeholder.com/150?text=Blusa${i + 1}`
+                }));
+            } else if (categoria === "jeans") {
+                productos = Array(20).fill().map((_, i) => ({
+                    nombre: `Jean ${i + 1}`,
+                    precio: 45 + i,
+                    imagen: `https://via.placeholder.com/150?text=Jean${i + 1}`
+                }));
+            } else if (categoria === "trajes") {
+                productos = Array(20).fill().map((_, i) => ({
+                    nombre: `Traje ${i + 1}`,
+                    precio: 100 + i,
+                    imagen: `https://via.placeholder.com/150?text=Traje${i + 1}`
+                }));
+            }
+
+            // Crear HTML para mostrar los productos
+            productos.forEach(producto => {
+                productosHTML += `
+                    <div class="producto">
+                        <img src="${producto.imagen}" alt="${producto.nombre}">
+                        <p>${producto.nombre} - $${producto.precio}</p>
+                        <button onclick="agregarProducto('${producto.nombre}', ${producto.precio})">Agregar a la cesta</button>
+                    </div>
+                `;
+            });
+
+            // Mostrar los productos en la página
+            document.getElementById("productos").innerHTML = productosHTML;
+        }
+
+        // Función para agregar producto a la cesta
+        function agregarProducto(nombre, precio) {
+            if (productosSeleccionados.length < 20) {
+                productosSeleccionados.push({ nombre, precio });
+                actualizarCesta();
+                alert(`${nombre} agregado a tu cesta`);
+            } else {
+                alert("Has alcanzado el límite de 20 productos.");
+            }
+        }
+
+        // Función para borrar la selección
+        function borrarSeleccion() {
+            productosSeleccionados = [];
+            actualizarCesta();
+            alert("Tu cesta ha sido vaciada.");
+        }
+
+        // Función para actualizar la cesta
+        function actualizarCesta() {
+            const cestaHTML = productosSeleccionados.map(producto => 
+                `<p>${producto.nombre} - $${producto.precio}</p>`
+            ).join('');
+            document.getElementById("cesta").innerHTML = cestaHTML;
+        }
+
+        // Función para calcular el total
+        function calcularTotal() {
+            let total = 0;
+            productosSeleccionados.forEach(producto => total += producto.precio);
+
+            document.getElementById("total").innerText = `Total: $${total.toFixed(2)}`;
+            document.getElementById("confirmar").style.display = "inline-block";
+        }
+
+        // Función para mostrar la página de entrega (domicilio o tienda)
+        function mostrarSeleccionEntrega() {
+            document.getElementById("seleccion-producto").classList.remove("activa");
+            document.getElementById("opcion-entrega").classList.add("activa");
+        }
+
+        // Función para mostrar el formulario de domicilio
+        function mostrarFormularioDomicilio() {
+            metodoEntrega = "domicilio";
+            document.getElementById("opcion-entrega").classList.remove("activa");
+            document.getElementById("datos-usuario").classList.add("activa");
+        }
+
+        // Función para mostrar los datos de usuario (nombre, teléfono, correo, dirección)
+        function mostrarMetodoPago() {
+            const nombre = document.getElementById("nombre").value;
+            const telefono = document.getElementById("telefono").value;
+            const correo = document.getElementById("correo").value;
+            const direccion = document.getElementById("direccion").value;
+
+            if (!nombre || !telefono || !correo || !direccion) {
+                alert("Por favor, ingresa todos los datos.");
+                return;
+            }
+
+            document.getElementById("datos-usuario").classList.remove("activa");
+            document.getElementById("metodo-pago").classList.add("activa");
+        }
+
+        // Función para regresar a la selección de categorías
+        function regresarCategoria() {
+            document.getElementById("seleccion-producto").classList.remove("activa");
+            document.getElementById("seleccion-categoria").classList.add("activa");
+        }
+
+        // Función para regresar a la selección de productos
+        function regresarProductos() {
+            document.getElementById("opcion-entrega").classList.remove("activa");
+            document.getElementById("seleccion-producto").classList.add("activa");
+        }
+    </script>
+
+</body>
+</html>
